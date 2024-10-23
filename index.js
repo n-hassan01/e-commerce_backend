@@ -10,13 +10,19 @@ app.use(cors());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // routing for api services and middlewares
+// api services
 const sampleCrudService = require("./controllers/sampleCrud");
+const loginService = require("./auth/loginService");
 
 // middlewares
+const authGuard = require("./middlewares/authGuard");
+
+// auth
+app.use("/login", loginService);
 
 // api services
 // sample crud
-app.use("/sample-crud", sampleCrudService);
+app.use("/sample-crud", authGuard, sampleCrudService);
 
 // error handling middleware
 app.use((req, res, next) => {
